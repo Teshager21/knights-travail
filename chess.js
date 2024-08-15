@@ -1,8 +1,8 @@
 const generateGraph=(size)=>{
-    let graph=[];
+    let graph={};
     for(i=0;i<size;i++){
         for(j=0;j<size;j++){
-            graph.push( findAdjacentList([i,j],size));
+            graph[`${i}${j}`]=( findAdjacentList([i,j],size));
         }  
     }
     return graph;
@@ -49,14 +49,13 @@ const isSubArray=(arr,sub)=>{
 
 knightMoves_recursive=(start,destination,path=[],prev=Array(64),trace=[])=>{
     if(start.join()===destination.join()) return start; //base case  
-    // if(trace.length>0) return trace;
     if(path.length===0) path.push(start); 
-    const adjacents=graph[calculateTreeIndex(start,Math.sqrt(graph.length))];
+    const adjacents=graph[start.join('')];
     if(isSubArray(path,adjacents)) return trace;   // if all of the adjacent vertices have been visited,return
 
     for(ad of adjacents){
         if(prev.some(el=>{return el.join()===ad.join();}))continue;  // if visited skip it 
-        prev[calculateTreeIndex(ad,Math.sqrt(graph.length))]=start;
+        prev[calculateTreeIndex(ad,Math.sqrt(Object.keys(graph).length))]=start;
         path.push(ad);
         if(ad.join()===destination.join()){ 
             trace.push(ad);
@@ -77,7 +76,7 @@ knightMoves_recursive=(start,destination,path=[],prev=Array(64),trace=[])=>{
 const tracePath= (ad,prev)=>{
     let trace=[ad];
     while(ad!==undefined){
-        const index=calculateTreeIndex(ad,Math.sqrt(graph.length));
+        const index=calculateTreeIndex(ad,Math.sqrt(Object.keys(graph).length));
         if(!prev[index]) break;
         if(!trace.includes(prev[index]))trace.unshift(prev[index]);
         ad=[...prev[index]];
@@ -89,13 +88,13 @@ const knightMoves=(start,destination)=>{
     let queue=[];
     let visited={};
     let previous=[];
-    const graphSize=Math.sqrt(graph.length);
+    const graphSize=Math.sqrt(Object.keys(graph).length);
     queue.push(start);
     visited[start]=true;
     while(queue.length){
         const currentVertex= queue.shift();
         visited[currentVertex]=true;
-        const adjacents=graph[calculateTreeIndex(currentVertex,graphSize)]
+        const adjacents=graph[currentVertex.join('')]
         for(const adjacent of adjacents){
              if(!visited[adjacent]) {
                 queue.push(adjacent);
@@ -110,7 +109,7 @@ const knightMoves=(start,destination)=>{
 
 
 
-console.log(knightMoves([7,7],[0,0]))
-// console.log(knightMoves_recursive([7,7],[0,0]))
+// console.log(knightMoves([7,7],[0,0]))
+console.log(knightMoves_recursive([7,7],[0,0]))
 
  
