@@ -87,16 +87,17 @@ const tracePath= (ad,prev)=>{
 
 const knightMoves=(start,destination)=>{
     let queue=[];
-    let visited=[];
+    let visited={};
     let previous=[];
     const graphSize=Math.sqrt(graph.length);
     queue.push(start);
+    visited[start]=true;
     while(queue.length){
         const currentVertex= queue.shift();
-        visited.push(currentVertex);
+        visited[currentVertex]=true;
         const adjacents=graph[calculateTreeIndex(currentVertex,graphSize)]
         for(const adjacent of adjacents){
-             if(!visited.some(vertex=>vertex.join()===adjacent.join())) {
+             if(!visited[adjacent]) {
                 queue.push(adjacent);
                 previous[calculateTreeIndex(adjacent,graphSize)]=currentVertex;
                 if(adjacent.join()===destination.join()) return  tracePath(adjacent,previous)
