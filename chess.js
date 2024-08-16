@@ -69,35 +69,38 @@ findAdjacents=(cell,size)=>{
         console.log(`> You made it in ${trace.length} moves. Here is you path: `)
         trace.map(v=>console.log(v))
     }
+
+    isSubArray=(arr,sub)=>{
+        let isSubArray=true;
+        for ( let item of sub)  if(!(arr.some(el=>el.join()===item.join()))) isSubArray=false; 
+        return isSubArray;  
+    }
+
+    knightMoves_recursive=(start,destination,path=[],prev={},trace=[])=>{
+    if(start. join()===destination.join()) return start; //base case  
+    if(path.length===0) path.push(start); 
+    const adjacents=this.AdjacenyList[start.join('')];
+    if(this.isSubArray(path,adjacents)) return trace;   // if all of the adjacent vertices have been visited,return
+    for(let ad of adjacents){
+        if(prev[ad.join('')])continue;  // if visited skip it 
+        prev[ad.join('')]=start;
+        path.push(ad);
+        if(ad.join()===destination.join()){ 
+            trace=this.tracePath(ad,prev);
+            return trace;}
+    }
+    path.shift();
+    for(let ad of path){
+        if(trace.length>0) return trace;
+        trace=this.knightMoves_recursive(ad,destination,path,prev,trace);
+    }
+    return trace;
 }
 
-// const isSubArray=(arr,sub)=>{
-//     let isSubArray=true;
-//     for ( item of sub)  if(!(arr.some(el=>el.join()===item.join()))) isSubArray=false; 
-//     return isSubArray;  
-// }
+}
 
-// knightMoves_recursive=(start,destination,path=[],prev={},trace=[])=>{
-//     if(start. join()===destination.join()) return start; //base case  
-//     if(path.length===0) path.push(start); 
-//     const adjacents=AdjacenyList[start.join('')];
-//     if(isSubArray(path,adjacents)) return trace;   // if all of the adjacent vertices have been visited,return
-//     for(ad of adjacents){
-//         if(prev[ad.join('')])continue;  // if visited skip it 
-//         prev[ad.join('')]=start;
-//         path.push(ad);
-//         if(ad.join()===destination.join()){ 
-//             trace.push(ad);
-//             trace=tracePath(ad,prev);
-//             return trace;}
-//     }
-//     path.shift();
-//     for(ad of path){
-//         if(trace.length>0) return trace;
-//         trace=knightMoves_recursive(ad,destination,path,prev,trace);
-//     }
-//     return trace;
-// }
+
+
 
 export default Chess;
 
