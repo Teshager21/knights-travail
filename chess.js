@@ -47,19 +47,19 @@ const isSubArray=(arr,sub)=>{
     return isSubArray;  
 }
 
-knightMoves_recursive=(start,destination,path=[],prev=Array(64),trace=[])=>{
-    if(start.join()===destination.join()) return start; //base case  
+knightMoves_recursive=(start,destination,path=[],prev={},trace=[])=>{
+    if(start. join()===destination.join()) return start; //base case  
     if(path.length===0) path.push(start); 
     const adjacents=graph[start.join('')];
     if(isSubArray(path,adjacents)) return trace;   // if all of the adjacent vertices have been visited,return
-
+ console.log(start,' -> ',adjacents)
     for(ad of adjacents){
-        if(prev.some(el=>{return el.join()===ad.join();}))continue;  // if visited skip it 
-        prev[calculateTreeIndex(ad,Math.sqrt(Object.keys(graph).length))]=start;
+        if(prev[ad.join('')])continue;  // if visited skip it 
+        prev[ad.join('')]=start;
         path.push(ad);
         if(ad.join()===destination.join()){ 
             trace.push(ad);
-            trace=tracePath(ad,prev,trace);
+            trace=tracePath(ad,prev);
             return trace;}
     }
     path.shift();
@@ -67,19 +67,19 @@ knightMoves_recursive=(start,destination,path=[],prev=Array(64),trace=[])=>{
         trace=knightMoves_recursive(ad,destination,path,prev,trace);
         if(ad.join()===destination.join()) {
             (trace.includes(ad))||trace.push(ad);
-            trace=tracePath(ad,prev,trace);
+            trace=tracePath(ad,prev);
             return trace};
     }
     return trace;
 }
 
-const tracePath= (ad,prev)=>{
-    let trace=[ad];
-    while(ad!==undefined){
-        const index=calculateTreeIndex(ad,Math.sqrt(Object.keys(graph).length));
-        if(!prev[index]) break;
-        if(!trace.includes(prev[index]))trace.unshift(prev[index]);
-        ad=[...prev[index]];
+const tracePath= (vertex,prev)=>{
+    let trace=[vertex];
+    while(vertex){
+        const key=vertex.join('');
+        if(!prev[key]) break;
+        if(!trace.includes(prev[key]))trace.unshift(prev[key]);
+        vertex=[...prev[key]];
     }  
     return trace; 
 }
@@ -87,8 +87,8 @@ const tracePath= (ad,prev)=>{
 const knightMoves=(start,destination)=>{
     let queue=[];
     let visited={};
-    let previous=[];
-    const graphSize=Math.sqrt(Object.keys(graph).length);
+    let previous={};
+    // const graphSize=Math.sqrt(Object.keys(graph).length);
     queue.push(start);
     visited[start]=true;
     while(queue.length){
@@ -98,7 +98,7 @@ const knightMoves=(start,destination)=>{
         for(const adjacent of adjacents){
              if(!visited[adjacent]) {
                 queue.push(adjacent);
-                previous[calculateTreeIndex(adjacent,graphSize)]=currentVertex;
+                previous[adjacent.join('')]=currentVertex;
                 if(adjacent.join()===destination.join()) return  tracePath(adjacent,previous)
              }
         }
@@ -109,7 +109,7 @@ const knightMoves=(start,destination)=>{
 
 
 
-// console.log(knightMoves([7,7],[0,0]))
+//  console.log(knightMoves([7,7],[0,0]))
 console.log(knightMoves_recursive([7,7],[0,0]))
 
  
