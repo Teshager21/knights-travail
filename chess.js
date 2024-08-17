@@ -37,7 +37,7 @@ findAdjacents=(cell,size)=>{
         while(vertex){
             const key=vertex.join('');
             if(!prev[key]) break;
-            if(!trace.includes(prev[key]))trace.unshift(prev[key]);
+            if(!trace.includes(prev[key])) trace.unshift(prev[key]);
             vertex=[...prev[key]];
         }  
         return trace; 
@@ -51,12 +51,13 @@ findAdjacents=(cell,size)=>{
         visited[start]=true;
         while(queue.length){
             const currentVertex= queue.shift();
-            visited[currentVertex]=true;
+          
             const adjacents=this.AdjacenyList[currentVertex.join('')]
             for(const adjacent of adjacents){
                  if(!visited[adjacent]) {
                     queue.push(adjacent);
                     previous[adjacent.join('')]=currentVertex;
+                    visited[currentVertex]=true;
                     if(adjacent.join()===destination.join()) return  this.displayResult(this.tracePath(adjacent,previous));
                  }
             }
@@ -76,24 +77,21 @@ findAdjacents=(cell,size)=>{
         return isSubArray;  
     }
 
-    knightMoves_recursive=(start,destination,path=[],prev={},trace=[])=>{
-    if(start. join()===destination.join()) return start; //base case  
-    if(path.length===0) path.push(start); 
+knightMoves_recursive=(start,destination,queue=[],prev={},trace=[],visited={})=>{
+    if(start. join()===destination.join()){
+        trace=this.tracePath(start,prev);
+        return trace;  
+    }  //base case  
     const adjacents=this.AdjacenyList[start.join('')];
-    if(this.isSubArray(path,adjacents)) return trace;   // if all of the adjacent vertices have been visited,return
-    for(let ad of adjacents){
-        if(prev[ad.join('')])continue;  // if visited skip it 
-        prev[ad.join('')]=start;
-        path.push(ad);
-        if(ad.join()===destination.join()){ 
-            trace=this.tracePath(ad,prev);
-            return trace;}
-    }
-    path.shift();
-    for(let ad of path){
-        if(trace.length>0) return trace;
-        trace=this.knightMoves_recursive(ad,destination,path,prev,trace);
-    }
+    adjacents.map(ad=>{if(!visited[ad])queue.push(ad)});
+    queue.shift();
+    
+    visited[start.join('')]=true;
+    if(queue.length){
+        const currentVertex=queue[0];
+        if(!visited[currentVertex.join('')]) prev[currentVertex.join('')]=start;
+        trace=this.knightMoves_recursive(currentVertex,destination,queue,prev,trace,visited);
+    }else return trace;
     return trace;
 }
 
